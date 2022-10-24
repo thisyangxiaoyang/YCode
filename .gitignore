@@ -33,6 +33,7 @@
 
 testPro
 *.idea
+__pycache__
 cmake-build-debug
 
 
