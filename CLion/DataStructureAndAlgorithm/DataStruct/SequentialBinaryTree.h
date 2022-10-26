@@ -59,7 +59,6 @@ namespace yang {
             }
         }
 
-
         friend std::ostream &operator<<(std::ostream &out, self &_self) {
             _foreach_print(_self.m_p_root);
             return out;
@@ -91,15 +90,15 @@ namespace yang {
         }
 
         bool _erase(const T &_data, tree_node **_p_root) {
-            tree_node* p_del_node = _find_node(*_p_root, _data);
-            tree_node* p_del_parent_node = nullptr;
+            tree_node *p_del_node = _find_node(*_p_root, _data);
+            tree_node *p_del_parent_node = nullptr;
             if (p_del_node) {
                 // 判断是否为根节点
                 if (p_del_node == *_p_root) { // 如果是根节点
                     // 判断根节点是否有右孩子
                     if (p_del_node->rightChild) { // 如果有右孩子
                         // 让根节点的左孩子成为根节点右孩子的最左孩子
-                        tree_node* tmp_node = p_del_node->rightChild;
+                        tree_node *tmp_node = p_del_node->rightChild;
                         while (tmp_node->leftChild) {
                             tmp_node = tmp_node->leftChild;
                         }
@@ -113,7 +112,8 @@ namespace yang {
                 } else {
                     p_del_parent_node = *_p_root;
                     // 找到要删除节点的父节点
-                    while (p_del_parent_node->leftChild != p_del_node && p_del_node->rightChild != p_del_node->rightChild) {
+                    while (p_del_parent_node->leftChild != p_del_node &&
+                           p_del_node->rightChild != p_del_node->rightChild) {
                         if (_data < p_del_parent_node->data) {
                             p_del_parent_node = p_del_parent_node->leftChild;
                         } else {
@@ -121,7 +121,7 @@ namespace yang {
                         }
                     }
                     if (p_del_node->rightChild) {
-                        tree_node* tmp_node = p_del_node->rightChild;
+                        tree_node *tmp_node = p_del_node->rightChild;
                         while (tmp_node->leftChild) {
                             tmp_node = tmp_node->leftChild;
                         }
@@ -146,11 +146,11 @@ namespace yang {
             }
         }
 
-        tree_node *_find_node(tree_node* _p_root, const T &_data) {
+        tree_node *_find_node(tree_node *_p_root, const T &_data) {
             if (nullptr == _p_root) {
                 return nullptr;
             }
-            tree_node* tmp = _p_root;
+            tree_node *tmp = _p_root;
             while (tmp) {
                 if (_data == tmp->data) {
                     return tmp;
