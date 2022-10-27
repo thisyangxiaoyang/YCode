@@ -59,6 +59,7 @@ namespace yang {
         }
 
         friend ostream& operator<<(ostream& out, const self& _self) {
+            cout << "AVLTree(data): ";
             _foreach_print(_self.m_p_root);
             return out;
         }
@@ -240,7 +241,7 @@ namespace yang {
             return;
         }
         _foreach_print(_p_root->p_left);
-        std::cout << _p_root->data << " ";
+        cout << _p_root->data << " ";
         _foreach_print(_p_root->p_right);
     }
 
