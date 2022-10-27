@@ -1,10 +1,9 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <unistd.h>
-#include <random>
 #include "DataStruct/SequentialBinaryTree.h"
 #include "DataStruct/AVLTree.h"
+#include <set>
+
+using namespace std;
 
 void SequentialBinaryTreeTest() {
     yang::SequentialBinaryTree<int> tr;
@@ -26,11 +25,16 @@ void SequentialBinaryTreeTest() {
 
 void AVLTreeTest() {
     yang::AVLTree<int> atr;
-    random_device e;
-    for (int i = 0; i < 10; ++i) {
-        atr.insert((int)e() % 10);
+    int arr[] = {3, 5, 1, 0, 9, 7, 6, 2, 8, 4};
+    int del_arr[] = {4, 3, 2, 1, 0, 5, 6, 7, 8, 9};
+    for (int & i : arr) {
+        atr.insert(i);
+    }
+    for (int & i: del_arr) {
+        atr.erase(i);
     }
 
+    cout << atr << endl;
     std::cout << "size: " << atr.size() << std::endl;
 }
 
