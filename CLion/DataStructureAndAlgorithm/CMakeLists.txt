@@ -3,4 +3,4 @@ project(DataStructureAndAlgorithm)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(DataStructureAndAlgorithm main.cpp DataStruct/MyVector.h DataStruct/SequentialBinaryTree.h)
+add_executable(DataStructureAndAlgorithm main.cpp DataStruct/MyVector.h DataStruct/SequentialBinaryTree.h DataStruct/AVLTree.h)
