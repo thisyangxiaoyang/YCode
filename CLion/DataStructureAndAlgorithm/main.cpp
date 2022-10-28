@@ -52,11 +52,8 @@ void Test23TreeTest() {
 }
 
 int main() {
-    {
-//        SequentialBinaryTreeTest();
-//        AVLTreeTest();
-    }
-
+    SequentialBinaryTreeTest();
+    AVLTreeTest();
     Test23TreeTest();
 
     return 0;

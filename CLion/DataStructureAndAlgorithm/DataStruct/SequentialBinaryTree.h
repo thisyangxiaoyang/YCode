@@ -15,13 +15,12 @@ namespace yang {
         using self = SequentialBinaryTreeNode<T>;
 
         T data;
-        self *leftChild;
-        self *rightChild;
+        self *p_left;
+        self *p_right;
 
-        SequentialBinaryTreeNode(const T &_data, self *_left, self *_right) {
+        explicit SequentialBinaryTreeNode(const T &_data) {
             data = _data;
-            leftChild = _left;
-            rightChild = _right;
+            p_left = p_right = nullptr;
         }
     };
 
@@ -64,24 +63,24 @@ namespace yang {
             if (nullptr == *_pp_root) {
                 return;
             }
-            _clear(&(*_pp_root)->leftChild);
-            _clear(&(*_pp_root)->rightChild);
+            _clear(&(*_pp_root)->p_left);
+            _clear(&(*_pp_root)->p_right);
             delete *_pp_root;
             *_pp_root = nullptr;
         }
 
         void _insert(const T &_data, tree_node **_pp_root) {
             if (nullptr == *_pp_root) {
-                *_pp_root = new tree_node(_data, nullptr, nullptr);
+                *_pp_root = new tree_node(_data);
                 ++m_size;
                 return;
             } else if ((*_pp_root)->data == _data) {
                 return;
             } else {
                 if (_data < (*_pp_root)->data) {
-                    _insert(_data, &(*_pp_root)->leftChild);
+                    _insert(_data, &(*_pp_root)->p_left);
                 } else {
-                    _insert(_data, &(*_pp_root)->rightChild);
+                    _insert(_data, &(*_pp_root)->p_right);
                 }
             }
         }
@@ -93,46 +92,46 @@ namespace yang {
                 // 判断是否为根节点
                 if (p_del_node == *_pp_root) { // 如果是根节点
                     // 判断根节点是否有右孩子
-                    if (p_del_node->rightChild) { // 如果有右孩子
+                    if (p_del_node->p_right) { // 如果有右孩子
                         // 让根节点的左孩子成为根节点右孩子的最左孩子
-                        tree_node *tmp_node = p_del_node->rightChild;
-                        while (tmp_node->leftChild) {
-                            tmp_node = tmp_node->leftChild;
+                        tree_node *tmp_node = p_del_node->p_right;
+                        while (tmp_node->p_left) {
+                            tmp_node = tmp_node->p_left;
                         }
-                        tmp_node->leftChild = p_del_node->leftChild;
-                        (*_pp_root) = p_del_node->rightChild;
+                        tmp_node->p_left = p_del_node->p_left;
+                        (*_pp_root) = p_del_node->p_right;
                     } else { // 如果根节点没有右孩子
-                        (*_pp_root) = p_del_node->leftChild; // 让根节点的左孩子根
+                        (*_pp_root) = p_del_node->p_left; // 让根节点的左孩子根
                     }
                     delete p_del_node;
                 } else { // 如果不是根节点
                     p_del_parent_node = *_pp_root;
                     // 找到要删除节点的父节点
-                    while (p_del_parent_node->leftChild != p_del_node &&
-                           p_del_node->rightChild != p_del_node->rightChild) {
+                    while (p_del_parent_node->p_left != p_del_node &&
+                           p_del_node->p_right != p_del_node->p_right) {
                         if (_data < p_del_parent_node->data) {
-                            p_del_parent_node = p_del_parent_node->leftChild;
+                            p_del_parent_node = p_del_parent_node->p_left;
                         } else {
-                            p_del_parent_node = p_del_parent_node->rightChild;
+                            p_del_parent_node = p_del_parent_node->p_right;
                         }
                     }
-                    if (p_del_node->rightChild) { // 如果有右孩子
+                    if (p_del_node->p_right) { // 如果有右孩子
                         // 让要删除节点的左孩子成为要删除节点右孩子的最左孩子
-                        tree_node *tmp_node = p_del_node->rightChild;
-                        while (tmp_node->leftChild) {
-                            tmp_node = tmp_node->leftChild;
+                        tree_node *tmp_node = p_del_node->p_right;
+                        while (tmp_node->p_left) {
+                            tmp_node = tmp_node->p_left;
                         }
-                        tmp_node->leftChild = p_del_node->leftChild;
-                        if (p_del_parent_node->rightChild == p_del_node) {
-                            p_del_parent_node->rightChild = p_del_node->rightChild;
+                        tmp_node->p_left = p_del_node->p_left;
+                        if (p_del_parent_node->p_right == p_del_node) {
+                            p_del_parent_node->p_right = p_del_node->p_right;
                         } else {
-                            p_del_parent_node->leftChild = p_del_node->rightChild;
+                            p_del_parent_node->p_left = p_del_node->p_right;
                         }
                     } else {
-                        if (p_del_parent_node->rightChild == p_del_node) {
-                            p_del_parent_node->rightChild = p_del_node->leftChild;
+                        if (p_del_parent_node->p_right == p_del_node) {
+                            p_del_parent_node->p_right = p_del_node->p_left;
                         } else {
-                            p_del_parent_node->leftChild = p_del_node->leftChild;
+                            p_del_parent_node->p_left = p_del_node->p_left;
                         }
                     }
                     delete p_del_node;
@@ -150,9 +149,9 @@ namespace yang {
                 if (_data == tmp->data) {
                     return tmp;
                 } else if (_data < tmp->data) {
-                    tmp = tmp->leftChild;
+                    tmp = tmp->p_left;
                 } else {
-                    tmp = tmp->rightChild;
+                    tmp = tmp->p_right;
                 }
             }
             return nullptr;
@@ -162,9 +161,9 @@ namespace yang {
             if (nullptr == _p_root) {
                 return;
             }
-            _foreach_print(_p_root->leftChild);
+            _foreach_print(_p_root->p_left);
             std::cout << _p_root->data << " ";
-            _foreach_print(_p_root->rightChild);
+            _foreach_print(_p_root->p_right);
         }
 
     private:
