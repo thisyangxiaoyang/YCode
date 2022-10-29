@@ -44,16 +44,16 @@ void AVLTreeTest() {
 void Test23TreeTest() {
     yang::_23Tree<int> t;
     int arr[] = {33, 45, 89, 12, 38, 39, 27, 21, 62, 34, 18, 94, 20, 61, 53};
-//    int arr[] = {1, 3, 5, 7, 9,  2, 4, 6, 8, 10};
     for (auto &i: arr) {
         t.insert(i);
     }
-    t.test();
+    cout << "2-3Tree data: " << t << endl;
+    cout << "size: " << t.size() << endl;
 }
 
 int main() {
-    SequentialBinaryTreeTest();
-    AVLTreeTest();
+//    SequentialBinaryTreeTest();
+//    AVLTreeTest();
     Test23TreeTest();
 
     return 0;

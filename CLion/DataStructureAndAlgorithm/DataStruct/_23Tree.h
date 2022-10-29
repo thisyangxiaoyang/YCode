@@ -28,13 +28,21 @@ namespace yang {
         };
 
         using tree_node = TreeNode;
+        using self = _23Tree<T>;
+        using size_type = size_t;
 
     public:
-        _23Tree() : m_p_root(nullptr) {}
+        _23Tree() : m_p_root(nullptr), m_size(0) {}
 
-        ~_23Tree() = default;
+        ~_23Tree() {
+            _clear(m_p_root);
+        }
 
-        // 插入一个节点倒树中
+        size_type size() const noexcept {
+            return m_size;
+        }
+
+        // 插入一个节点到树中
         void insert(const T &_data) {
             if (nullptr != m_p_root) {
                 _insert(m_p_root, nullptr, _data);
@@ -43,30 +51,44 @@ namespace yang {
                 m_p_root->count = 1;
                 m_p_root->data_arr[0] = _data;
             }
+            ++m_size;
         }
 
-        void test() {
-            _foreach_print(m_p_root);
+        void earse(const T &_data) {
+
+        }
+
+        void clear() {
+            _clear(m_p_root);
+            m_size = 0;
+        }
+
+        friend ostream& operator<<(ostream& out, const self &_self) {
+            _foreach_print(_self.m_p_root);
+            return out;
         }
 
     private:
         void _insert(tree_node *_p_node, tree_node *_p_parent, const T &_data);
 
-        void _foreach_print(const tree_node *_p_node);
+        void _earse(tree_node *_p_node, const T &_data);
+
+        void _clear(tree_node *_p_node);
+
+        static void _foreach_print(const tree_node *_p_node);
 
     private:
         tree_node *m_p_root; // 指向树根的指针
+        size_type m_size; // 当前元素个数
     };
 
     template<typename T>
-    void _23Tree<T>::_insert(_23Tree::tree_node *_p_node, _23Tree::tree_node *_p_parent, const T &_data) {
+    void _23Tree<T>::_insert(tree_node *_p_node, tree_node *_p_parent, const T &_data) {
         if (nullptr == _p_node) return;
         if (0 == _p_node->count) { // 如果当前节点是新建立的
             _p_node->data_arr[0] = _data;
             ++_p_node->count;
-            return;
-        }
-        if (1 == _p_node->count) { // 第二个节点
+        } else if (1 == _p_node->count) { // 第二个节点
             if (_data < _p_node->data_arr[0]) { // 往左边添加
                 if (_p_node->p_node_arr[0]) { // 如果有孩子
                     _insert(_p_node->p_node_arr[0], _p_node, _data);
@@ -195,6 +217,22 @@ namespace yang {
                 _p_node->p_node_arr[1] = p_node2;
             }
         }
+    }
+
+    template<typename T>
+    void _23Tree<T>::_earse(tree_node *_p_node, const T &_data) {
+        if (_p_node->count == 3)
+    }
+
+    template<typename T>
+    void _23Tree<T>::_clear(tree_node *_p_node) {
+        if (nullptr == _p_node) {
+            return;
+        }
+        _clear(_p_node->p_node_arr[2]);
+        _clear(_p_node->p_node_arr[1]);
+        _clear(_p_node->p_node_arr[0]);
+        delete _p_node;
     }
 
     template<typename T>
