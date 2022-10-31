@@ -31,7 +31,7 @@
 *.out
 *.app
 
-testPro
+test*
 *.idea
 __pycache__
 cmake-build-debug

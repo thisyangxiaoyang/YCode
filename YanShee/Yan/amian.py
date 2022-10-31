@@ -119,6 +119,7 @@ def number3(_n: str):
     tts("已到达指定位置")
 
 
-number1()
-number2()
-number3('2')
+if __name__ == "__main__":
+    number1()
+    number2()
+    number3('2')
