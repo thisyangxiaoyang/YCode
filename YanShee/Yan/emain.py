@@ -141,6 +141,7 @@ def number3():
 
 
 if __name__ == "__main__":
-    # number1(True)
+    get_col_rec()
+    number1(True)
     number2()
     number3()
