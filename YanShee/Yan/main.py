@@ -1,7 +1,7 @@
 import YanAPI as Yan
 import time
 
-ip_addr = "192.168.1.141"
+ip_addr = "192.168.1.122"
 Yan.yan_api_init(ip_addr)  # 初始化YanAPI
 at_left = True  # 二阶段位置
 box_num = '0'  # 保存物品放入位置
@@ -57,6 +57,18 @@ def get_iat_col() -> str:
     return "error"
 
 
+def qr_handle(time_out: int = 8) -> str:
+    qr_res = Yan.sync_do_QR_code_recognition(time_out)
+    print("qr_res: %s" % qr_res)
+    if qr_res["code"] != 0 or qr_res["msg"] != "Success":  # 如果二维码识别失败
+        return '2'
+    qr_contents = qr_res["data"]["contents"]
+    if 0 == len(qr_contents):
+        return '2'
+    else:
+        return qr_contents[0]
+
+
 def number1(left: bool = True):
     x = 0
     motion()
@@ -68,14 +80,15 @@ def number1(left: bool = True):
         motion()
         motion("walk", "forward", repeat=6)
         motion()
-        infrared = Yan.get_sensors_infrared_value() / 10.0
-        if infrared < 5.5:
+        print(Yan.get_sensors_infrared())
+        infrared = Yan.get_sensors_infrared_value()
+        if infrared / 10.0 < 5.5:
             tts("检测到障碍物距离约为" + str(infrared) + "厘米")
             motion("右走", repeat=4)
             x += 4
             motion()
         motion("跨")
-        motion("walk", "forward", repeat=7)
+        motion("walk", "forward", repeat=6)
     else:
         motion("右走", repeat=2)
         x += 2
@@ -92,7 +105,7 @@ def number1(left: bool = True):
         motion("walk", "forward", repeat=7)
     print(x)
     if x < 0:  # left
-        motion("右走", repeat=-x)
+        motion("右走", repeat=2)
     elif x > 0:  # right
         motion("左走", repeat=1)
     tts("已到达指定位置")
@@ -114,12 +127,12 @@ def number2():
         motion("后抱")
         get_col_rec()
     motion("抱复位")
-    box_num = Yan.sync_do_QR_code_recognition(-1)["data"]["contents"][0]
-    motion("右走", repeat=6)
+    box_num = qr_handle(-1)
+    motion("右走", repeat=5)
 
 
 def number3():
-    qr_result = Yan.sync_do_QR_code_recognition(-1)["data"]["contents"][0]
+    qr_result = qr_handle(-1)
     if qr_result == box_num:
         if not at_left:
             motion("walk", "forward", repeat=2)
@@ -128,7 +141,7 @@ def number3():
         if at_left:
             motion("walk", "backward", repeat=2)
         motion("右看")
-        qr_result = Yan.sync_do_QR_code_recognition(10)["data"]["contents"][0]
+        qr_result = qr_handle(7)
         if qr_result == box_num:
             motion("右放")
         else:
