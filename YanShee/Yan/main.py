@@ -4,7 +4,7 @@ import time
 ip_addr = "192.168.1.122"
 Yan.yan_api_init(ip_addr)  # 初始化YanAPI
 at_left = True  # 二阶段位置
-box_num = '0'  # 保存物品放入位置
+box_num = None  # 保存物品放入位置
 
 
 def motion(name: str = "复位", direction: str = "", speed: str = "normal", repeat: int = 1, sy: bool = True) -> any:
@@ -24,12 +24,15 @@ def iat() -> str:
     return Yan.sync_do_voice_iat_value()
 
 
-def get_col_rec() -> str:
+def get_col_rec(_time_out: int = 3) -> str:
     col_dt = {"no color detected": "没有检测到颜色", "pink": "粉", "red": "红", "green": "绿", "blue": "蓝", "yellow": "黄",
               "cyan": "青", "magenta": "洋红", "orange": "橙", "violet": "紫", "brown": "棕", "black": "黑", "white": "白",
               "gray": "灰"}
     Yan.start_color_recognition()
-    time.sleep(3)
+    if _time_out <= 0:
+        time.sleep(3)
+    else:
+        time.sleep(_time_out)
     Yan.stop_color_recognition()
     col_res = Yan.get_visual_task_result("color", "color_detect")["data"]["color"][0]["name"]
     print("col_res: %s" % col_res)
